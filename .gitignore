@@ -1,0 +1,6 @@
+.DS_Store
+.vscode
+*.log
+.env
+node_modules
+server/public/*.js*
