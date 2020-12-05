@@ -35,8 +35,9 @@ create table "decks" (
 );
 
 create table "deckFlashcards" (
-  "deckId"      integer not null,
-  "flashcardId" integer not null,
+  "deckId"      integer        not null,
+  "flashcardId" integer        not null,
+  "addedAt"     timestamptz(6) not null default now(),
   unique ("deckId", "flashcardId"),
   foreign key ("deckId")
    references "decks" ("deckId"),
