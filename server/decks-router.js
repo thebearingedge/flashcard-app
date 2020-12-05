@@ -97,13 +97,11 @@ decksRouter.put('/:deckId/:flashcardId', (req, res, next) => {
            $2
      where exists (
        select 1
-         from "decks"
-        where "deckId" = $1
-          and "userId" = $3
-     ) and exists (
-         select 1
-           from "flashcards"
-          where "flashcardId" = $2
+         from "decks" as "d"
+         join "flashcards" as "f" using ("userId")
+        where "d"."deckId"      = $1
+          and "f"."flashcardId" = $2
+          and "d"."userId"      = $3
      )
         on conflict ("deckId", "flashcardId")
         do update
