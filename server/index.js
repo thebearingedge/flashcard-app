@@ -5,7 +5,7 @@ const authRouter = require('./auth-router');
 const decksRouter = require('./decks-router');
 const attemptsRouter = require('./attempts-router');
 const flashcardsRouter = require('./flashcards-router');
-const { errorHandler } = require('./middleware');
+const { authorize, errorHandler } = require('./middleware');
 
 const app = express();
 
@@ -19,6 +19,7 @@ const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
 app.use('/api/auth', authRouter);
+app.use(authorize);
 app.use('/api/decks', decksRouter);
 app.use('/api/attempts', attemptsRouter);
 app.use('/api/flashcards', flashcardsRouter);

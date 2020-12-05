@@ -1,11 +1,10 @@
 const { Router } = require('express');
 const db = require('./db');
-const { authorize } = require('./middleware');
 const ClientError = require('./client-error');
 
 const decksRouter = new Router();
 
-decksRouter.post('/', authorize, (req, res, next) => {
+decksRouter.post('/', (req, res, next) => {
   const { userId } = req.user;
   const { name } = req.body;
   if (!name) {
@@ -26,6 +25,7 @@ decksRouter.post('/', authorize, (req, res, next) => {
 });
 
 decksRouter.get('/:deckId', (req, res, next) => {
+  const { userId } = req.user;
   const deckId = parseInt(req.params.deckId, 10);
   if (!Number.isInteger(deckId) || deckId < 1) {
     throw new ClientError(400, 'deckId must be a positive integer');
@@ -38,8 +38,9 @@ decksRouter.get('/:deckId', (req, res, next) => {
       join "deckFlashcards" using ("deckId")
       join "flashcards" as "f" using ("flashcardId")
      where "d"."deckId" = $1
+       and "d"."userId" = $1
   `;
-  const params = [deckId];
+  const params = [deckId, userId];
   db.query(sql, params)
     .then(result => {
       const [deck] = result.rows;
@@ -80,7 +81,7 @@ decksRouter.put('/:deckId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-decksRouter.put('/:deckId/:flashcardId', authorize, (req, res, next) => {
+decksRouter.put('/:deckId/:flashcardId', (req, res, next) => {
   const { userId } = req.user;
   const deckId = parseInt(req.params.deckId, 10);
   if (!Number.isInteger(deckId) || deckId < 1) {
@@ -121,7 +122,7 @@ decksRouter.put('/:deckId/:flashcardId', authorize, (req, res, next) => {
     .catch(err => next(err));
 });
 
-decksRouter.delete('/:deckId/:flashcardId', authorize, (req, res, next) => {
+decksRouter.delete('/:deckId/:flashcardId', (req, res, next) => {
   const { userId } = req.user;
   const deckId = parseInt(req.params.deckId, 10);
   if (!Number.isInteger(deckId) || deckId < 1) {

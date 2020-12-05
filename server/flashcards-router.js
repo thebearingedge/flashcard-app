@@ -1,11 +1,10 @@
 const { Router } = require('express');
 const db = require('./db');
-const { authorize } = require('./middleware');
 const ClientError = require('./client-error');
 
 const flashcardsRouter = new Router();
 
-flashcardsRouter.post('/', authorize, (req, res, next) => {
+flashcardsRouter.post('/', (req, res, next) => {
   const { userId } = req.user;
   const { question, answer, tags = [] } = req.body;
   if (!question || !answer) {
@@ -29,7 +28,8 @@ flashcardsRouter.post('/', authorize, (req, res, next) => {
 });
 
 flashcardsRouter.get('/', (req, res, next) => {
-  const { userId, tags = [] } = req.query;
+  const { userId } = req.user;
+  const { tags = [] } = req.query;
   const sql = `
     select *
       from "flashcards"
@@ -47,6 +47,7 @@ flashcardsRouter.get('/', (req, res, next) => {
 });
 
 flashcardsRouter.get('/:flashcardId', (req, res, next) => {
+  const { userId } = req.user;
   const flashcardId = parseInt(req.params.flashcardId, 10);
   if (!Number.isInteger(flashcardId) || flashcardId < 1) {
     throw new ClientError(400, 'flashcardId must be a positive integer');
@@ -55,8 +56,9 @@ flashcardsRouter.get('/:flashcardId', (req, res, next) => {
     select *
       from "flashcards"
      where "flashcardId" = $1
+       and "userId"      = $2
   `;
-  const params = [flashcardId];
+  const params = [flashcardId, userId];
   db.query(sql, params)
     .then(result => {
       const [flashcard] = result.rows;
@@ -68,7 +70,7 @@ flashcardsRouter.get('/:flashcardId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-flashcardsRouter.put('/:flashcardId', authorize, (req, res, next) => {
+flashcardsRouter.put('/:flashcardId', (req, res, next) => {
   const { userId } = req.user;
   const flashcardId = parseInt(req.params.flashcardId, 10);
   if (!Number.isInteger(flashcardId) || flashcardId < 1) {
@@ -102,7 +104,7 @@ flashcardsRouter.put('/:flashcardId', authorize, (req, res, next) => {
     .catch(err => next(err));
 });
 
-flashcardsRouter.delete('/:flashcardId', authorize, (req, res, next) => {
+flashcardsRouter.delete('/:flashcardId', (req, res, next) => {
   const { userId } = req.user;
   const flashcardId = parseInt(req.params.flashcardId, 10);
   if (!Number.isInteger(flashcardId) || flashcardId < 1) {

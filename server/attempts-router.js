@@ -1,11 +1,10 @@
 const { Router } = require('express');
 const db = require('./db');
-const { authorize } = require('./middleware');
 const ClientError = require('./client-error');
 
 const attemptsRouter = new Router();
 
-attemptsRouter.post('/', authorize, (req, res, next) => {
+attemptsRouter.post('/', (req, res, next) => {
   const { userId } = req.user;
   const flashcardId = parseInt(req.body.flashcardId, 10);
   if (!Number.isInteger(flashcardId) || flashcardId < 1) {
