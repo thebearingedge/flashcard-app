@@ -13,13 +13,24 @@ attemptsRouter.post('/', (req, res, next) => {
   const isCorrect = Boolean(req.body.isCorrect);
   const sql = `
     insert into "attempts" ("userId", "flashcardId", "isCorrect")
-    values ($1, $2, $3)
+    select $1,
+           $2,
+           $3
+     where exists (
+       select 1
+         from "flashcards"
+        where "userId"      = $1
+          and "flashcardId" = $2
+     )
     returning *
   `;
   const params = [userId, flashcardId, isCorrect];
   db.query(sql, params)
     .then(result => {
       const [attempt] = result.rows;
+      if (!attempt) {
+        throw new ClientError(404, `cannot find flashcard with flashcardId ${flashcardId}`);
+      }
       res.status(201).json(attempt);
     })
     .catch(err => next(err));
