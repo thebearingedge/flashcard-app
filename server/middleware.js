@@ -12,6 +12,10 @@ exports.authorize = (req, res, next) => {
   }
 };
 
+exports.apiNotFound = (req, res, next) => {
+  throw new ClientError(404, `cannot ${req.method} ${req.originalUrl}`);
+};
+
 exports.errorHandler = (err, req, res, next) => {
   if (err instanceof ClientError) {
     res.status(err.status).json({ message: err.message });

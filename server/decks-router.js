@@ -33,12 +33,13 @@ decksRouter.get('/:deckId', (req, res, next) => {
   const sql = `
     select "d"."deckId",
            "d"."name",
-           json_agg("f".*) as "flashcards"
+           to_jsonb(array_remove(array_agg("f".*), null)) as "flashcards"
       from "decks" as "d"
-      join "deckFlashcards" using ("deckId")
-      join "flashcards" as "f" using ("flashcardId")
+      left join "deckFlashcards" using ("deckId")
+      left join "flashcards" as "f" using ("flashcardId")
      where "d"."deckId" = $1
-       and "d"."userId" = $1
+       and "d"."userId" = $2
+     group by "d"."deckId"
   `;
   const params = [deckId, userId];
   db.query(sql, params)
@@ -118,6 +119,35 @@ decksRouter.put('/:deckId/:flashcardId', (req, res, next) => {
       res.json(deckFlashcard);
     })
     .catch(err => next(err));
+});
+
+decksRouter.delete('/:deckId/', (req, res, next) => {
+  const { userId } = req.user;
+  const deckId = parseInt(req.params.deckId, 10);
+  if (!Number.isInteger(deckId) || deckId < 1) {
+    throw new ClientError(400, 'deckId must be a positive integer');
+  }
+  const sql = `
+    with "deletedDeckFlashcards" as (
+      delete from "deckFlashcards" as "df" using "decks" as "d"
+        where "df"."deckId" = $1
+          and "d"."deckId"  = $1
+          and "d"."userId"  = $2
+    )
+    delete from "decks"
+     where "deckId" = $1
+       and "userId" = $2
+    returning *
+  `;
+  const values = [deckId, userId];
+  db.query(sql, values)
+    .then(result => {
+      const [flashcard] = result.rows;
+      if (!flashcard) {
+        throw new ClientError(404, `cannot find deck with deckId ${deckId}`);
+      }
+      res.sendStatus(204);
+    });
 });
 
 decksRouter.delete('/:deckId/:flashcardId', (req, res, next) => {
