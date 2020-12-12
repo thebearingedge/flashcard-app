@@ -30,6 +30,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     publicPath: '/',
+    public: 'flashcard-app.localhost',
     contentBase: publicPath,
     historyApiFallback: true,
     host: '0.0.0.0',
@@ -39,5 +40,8 @@ module.exports = {
     },
     stats: 'minimal',
     watchContentBase: true
+  },
+  performance: {
+    hints: false
   }
 };
