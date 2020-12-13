@@ -1,7 +1,7 @@
 import React from 'react';
 import AppContext from '../app-context';
 
-export default function withAuthRequired(PageComponent) {
+export default function withAuthorization(Page) {
 
   class Authorized extends React.Component {
     render() {
@@ -9,7 +9,7 @@ export default function withAuthRequired(PageComponent) {
         window.location.hash = 'sign-in';
         return null;
       }
-      return <PageComponent />;
+      return <Page />;
     }
   }
 
