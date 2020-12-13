@@ -32,7 +32,6 @@ module.exports = {
     publicPath: '/',
     public: 'flashcard-app.localhost',
     contentBase: publicPath,
-    historyApiFallback: true,
     host: '0.0.0.0',
     port: process.env.DEV_SERVER_PORT,
     proxy: {

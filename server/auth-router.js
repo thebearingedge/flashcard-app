@@ -24,7 +24,10 @@ authRouter.post('/sign-up', (req, res, next) => {
     })
     .then(result => {
       const [user] = result.rows;
-      res.status(201).json(user);
+      const { userId } = user;
+      const payload = { userId };
+      const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+      res.status(201).json({ user, token });
     })
     .catch(err => next(err));
 });
