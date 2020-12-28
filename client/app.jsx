@@ -11,7 +11,7 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       isAuthorizing: true,
-      view: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash)
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
@@ -20,7 +20,7 @@ export default class App extends React.Component {
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({
-        view: parseRoute(window.location.hash)
+        route: parseRoute(window.location.hash)
       });
     });
     const token = window.localStorage.getItem('flashcard-app-token');
@@ -52,7 +52,7 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    switch (this.state.view.path) {
+    switch (this.state.route.path) {
       case '':
         return <HomePage />;
       case 'sign-in':
@@ -65,9 +65,9 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isAuthorizing) return null;
-    const { user, view } = this.state;
+    const { user, route } = this.state;
     const { handleSignIn, handleSignOut } = this;
-    const contextValue = { user, view, handleSignIn, handleSignOut };
+    const contextValue = { user, route, handleSignIn, handleSignOut };
     return (
       <AppContext.Provider value={contextValue}>
         { this.renderPage() }

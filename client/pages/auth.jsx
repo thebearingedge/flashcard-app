@@ -5,9 +5,9 @@ import AuthForm from '../components/auth-form';
 
 export default class AuthPage extends React.Component {
   render() {
-    const { user, view, handleSignIn } = this.context;
+    const { user, route, handleSignIn } = this.context;
     if (user) return <Redirect to="" />;
-    const weclomeMessage = view.path === 'sign-in'
+    const weclomeMessage = route.path === 'sign-in'
       ? 'Please sign in to continue'
       : 'Create an account to start making flash cards!';
     return (
@@ -16,14 +16,14 @@ export default class AuthPage extends React.Component {
           <header className="text-center">
             <h2 className="mb-2">
               <i className="fas fa-bolt me-2" />
-              Flashcard Zap
+              Flashcard App
             </h2>
             <p className="text-muted mb-4">{ weclomeMessage }</p>
           </header>
           <div className="card p-3 ">
             <AuthForm
-              key={view.path}
-              action={view.path}
+              key={route.path}
+              action={route.path}
               onSignIn={handleSignIn} />
           </div>
         </div>
