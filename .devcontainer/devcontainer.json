@@ -1,7 +1,6 @@
 {
   "name": "flashcard-app",
   "image": "ubuntu-dev-image:latest",
-  "workspaceFolder": "/home/dev/flashcard-app",
   "forwardPorts": [
     80,
     3000,
