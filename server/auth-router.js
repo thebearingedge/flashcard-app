@@ -25,7 +25,7 @@ authRouter.post('/sign-up', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       const { userId } = user;
-      const payload = { userId };
+      const payload = { userId, username };
       const token = jwt.sign(payload, process.env.TOKEN_SECRET);
       res.status(201).json({ user, token });
     })
@@ -52,7 +52,7 @@ authRouter.post('/sign-in', (req, res, next) => {
         .verify(hashedPassword, password)
         .then(matches => {
           if (!matches) throw new ClientError(401, 'invalid login');
-          const payload = { userId };
+          const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
           const user = { userId, username };
           res.status(201).json({ user, token });
