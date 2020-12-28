@@ -6,7 +6,7 @@ import AuthForm from '../components/auth-form';
 export default class AuthPage extends React.Component {
   render() {
     const { user, route, handleSignIn } = this.context;
-    if (user) return <Redirect to="" />;
+    if (user) return <Redirect to="#" />;
     const weclomeMessage = route.path === 'sign-in'
       ? 'Please sign in to continue'
       : 'Create an account to start making flash cards!';

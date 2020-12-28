@@ -61,26 +61,26 @@ authRouter.post('/sign-in', (req, res, next) => {
     .catch(err => next(err));
 });
 
-authRouter.get('/', (req, res, next) => {
-  const token = req.get('x-access-token');
-  if (!token) {
-    res.status(200).json({ user: null });
-    return;
-  }
-  const { userId } = jwt.verify(token, process.env.TOKEN_SECRET);
-  const sql = `
-    select "userId",
-           "username"
-      from "users"
-     where "userId" = $1
-  `;
-  const params = [userId];
-  db.query(sql, params)
-    .then(result => {
-      const [user = null] = result.rows;
-      res.json({ user });
-    })
-    .catch(err => next(err));
-});
+// authRouter.get('/', (req, res, next) => {
+//   const token = req.get('x-access-token');
+//   if (!token) {
+//     res.status(200).json({ user: null });
+//     return;
+//   }
+//   const { userId } = jwt.verify(token, process.env.TOKEN_SECRET);
+//   const sql = `
+//     select "userId",
+//            "username"
+//       from "users"
+//      where "userId" = $1
+//   `;
+//   const params = [userId];
+//   db.query(sql, params)
+//     .then(result => {
+//       const [user = null] = result.rows;
+//       res.json({ user });
+//     })
+//     .catch(err => next(err));
+// });
 
 module.exports = authRouter;
