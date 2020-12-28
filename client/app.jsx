@@ -25,11 +25,7 @@ export default class App extends React.Component {
       });
     });
     const token = window.localStorage.getItem('flashcard-app-token');
-    if (!token) {
-      this.setState({ isAuthorizing: false });
-      return;
-    }
-    const user = decodeToken(token);
+    const user = token ? decodeToken(token) : null;
     this.setState({ isAuthorizing: false, user });
   }
 
