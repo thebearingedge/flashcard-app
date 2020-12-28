@@ -1,0 +1,12 @@
+{
+  "name": "${localWorkspaceFolderBasename}",
+  "image": "ubuntu-dev-image:latest",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "workspaceFolder": "/${localWorkspaceFolderBasename}",
+  "forwardPorts": [
+    80,
+    3000,
+    3001,
+    8081
+  ]
+}
