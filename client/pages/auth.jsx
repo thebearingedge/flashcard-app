@@ -1,14 +1,12 @@
 import React from 'react';
 import AppContext from '../app-context';
+import Redirect from '../components/redirect';
 import AuthForm from '../components/auth-form';
 
 export default class AuthPage extends React.Component {
   render() {
     const { user, view, handleSignIn } = this.context;
-    if (user) {
-      window.location.hash = '';
-      return null;
-    }
+    if (user) return <Redirect to="" />;
     const weclomeMessage = view.path === 'sign-in'
       ? 'Please sign in to continue'
       : 'Create an account to start making flash cards!';
@@ -18,7 +16,7 @@ export default class AuthPage extends React.Component {
           <header className="text-center">
             <h2 className="mb-2">
               <i className="fas fa-bolt me-2" />
-              Flashcard App
+              Flashcard Zap
             </h2>
             <p className="text-muted mb-4">{ weclomeMessage }</p>
           </header>

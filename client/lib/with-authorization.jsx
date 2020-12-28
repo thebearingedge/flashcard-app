@@ -1,13 +1,13 @@
 import React from 'react';
 import AppContext from '../app-context';
+import Redirect from '../components/redirect';
 
 export default function withAuthorization(Page) {
 
   class Authorized extends React.Component {
     render() {
       if (!this.context.user) {
-        window.location.hash = 'sign-in';
-        return null;
+        return <Redirect to="sign-in" />;
       }
       return <Page />;
     }

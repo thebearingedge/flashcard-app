@@ -44,13 +44,11 @@ export default class App extends React.Component {
   handleSignIn({ user, token }) {
     localStorage.setItem('flashcard-app-token', token);
     this.setState({ user });
-    window.location.hash = '';
   }
 
   handleSignOut() {
     window.localStorage.removeItem('flashcard-app-token');
     this.setState({ user: null });
-    window.location.hash = 'sign-in';
   }
 
   renderPage() {

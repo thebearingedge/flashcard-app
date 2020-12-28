@@ -30,7 +30,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     publicPath: '/',
-    public: 'flashcard-app.localhost',
+    public: `http://flashcard-app.localhost${process.env.PORT}`,
     contentBase: publicPath,
     host: '0.0.0.0',
     port: process.env.DEV_SERVER_PORT,
