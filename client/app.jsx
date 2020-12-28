@@ -1,6 +1,7 @@
 import React from 'react';
 import AppContext from './app-context';
 import parseRoute from './lib/parse-route';
+import decodeToken from './lib/decode-token';
 import AuthPage from './pages/auth';
 import HomePage from './pages/home';
 import NotFoundPage from './pages/not-found';
@@ -28,17 +29,8 @@ export default class App extends React.Component {
       this.setState({ isAuthorizing: false });
       return;
     }
-    const req = {
-      method: 'GET',
-      headers: {
-        'X-Access-Token': token
-      }
-    };
-    fetch('/api/auth', req)
-      .then(res => res.json())
-      .then(({ user }) => {
-        this.setState({ user, isAuthorizing: false });
-      });
+    const user = decodeToken(token);
+    this.setState({ isAuthorizing: false, user });
   }
 
   handleSignIn({ user, token }) {
